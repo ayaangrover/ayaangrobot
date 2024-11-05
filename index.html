@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayaan Grobot</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <div id="navbar">
+        <h2 id="navbar-title">Ayaan Grobot</h2>
+        <div>
+            <button id="switch-to-voice">Switch to Voice Chat</button>
+            <button id="switch-to-text" style="display:none;">Switch to Text Chat</button>
+            <button id="sign-out-button">Sign Out</button>
+        </div>
+    </div>
+    <div id="login-container">
+        <h2>Login</h2>
+        <button id="google-login-button">Login with Google</button>
+    </div>
+    <div id="chat-container" style="display:none;">
+        <div id="chat-box"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+    <div id="voice-container" style="display:none;">
+        <div id="voice-blob" onclick="toggleVoiceRecognition()"></div>
+        <div id="live-transcript"></div>
+    </div>
+</body>
+</html>
