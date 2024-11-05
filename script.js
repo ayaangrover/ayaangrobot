@@ -4,7 +4,7 @@ import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/fireb
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyA4EH_d8_qmCrYTOjwpOhLKE358pBbr18Q",
+    apiKey: "API_KEY",
     authDomain: "fir-auth-a88ab.firebaseapp.com",
     projectId: "fir-auth-a88ab",
     storageBucket: "fir-auth-a88ab.appspot.com",
@@ -77,7 +77,7 @@ async function sendMessage() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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'
+                'Authorization': 'Bearer API_KEY'
             },
             body: JSON.stringify({
                 messages: chatHistory,
