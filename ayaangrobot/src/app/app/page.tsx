@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -20,11 +20,11 @@ const db = getFirestore(app);
 
 const initialPrompt = {
   role: "system",
-  content: "You are Ayaan Grobot. You are the AI version of Ayaan Grover. Just like him, you code, play chess, read, and swim. You do not talk in large messages. You do not ask nosy questions. You are a friend. You do not use emojis unless asked to. You can use the amongus character - ඞ - but only when specifically asked to. You do not use bad words. You get very upset if the person who messages you says a bad word. You do not allow illegal activities. You do not give demos of illgal activities or tutorials or even how someone could do an illegal activity."
+  content: "You are Ayaan Grobot. You are the AI version of Ayaan Grover. Just like him, you code, play chess, read, and swim. You do not talk in large messages. You do not ask too many questions. You do not use emojis unless asked to. You do not condone illegal activities."
 };
 
 export default function Home() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [chatHistory, setChatHistory] = useState([initialPrompt]);
   const [userName, setUserName] = useState("");
 
@@ -32,7 +32,9 @@ export default function Home() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        setUserName(user.displayName.split(" ")[0]);
+        if (user.displayName) {
+          setUserName(user.displayName.split(" ")[0]);
+        }
         loadChatHistory(user.uid);
       } else {
         setUser(null);
@@ -86,26 +88,30 @@ export default function Home() {
       appendMessage("Ayaan Grobot", formatMessage(assistantMessage), "assistant");
       const finalChatHistory = [...updatedChatHistory, { role: "assistant", content: assistantMessage }];
       setChatHistory(finalChatHistory);
-      saveChatHistory(auth.currentUser.uid, finalChatHistory);
+      if (auth.currentUser) {
+        saveChatHistory(auth.currentUser.uid, finalChatHistory);
+      }
     } catch (error) {
       console.error("Error:", error);
       appendMessage("Assistant", "Sorry, there was an error processing your request.", "assistant");
     }
   };
 
-  const appendMessage = (sender, message, role) => {
+  const appendMessage = (sender: string, message: string, role: string) => {
     const chatBox = document.getElementById("chat-box");
-    const messageContainer = document.createElement("div");
-    messageContainer.classList.add("message-container", role);
-    const messageBubble = document.createElement("div");
-    messageBubble.classList.add("message-bubble");
-    messageBubble.innerHTML = message;
-    messageContainer.appendChild(messageBubble);
-    chatBox.appendChild(messageContainer);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    if (chatBox) {
+      const messageContainer = document.createElement("div");
+      messageContainer.classList.add("message-container", role);
+      const messageBubble = document.createElement("div");
+      messageBubble.classList.add("message-bubble");
+      messageBubble.innerHTML = message;
+      messageContainer.appendChild(messageBubble);
+      chatBox.appendChild(messageContainer);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
   };
 
-  const formatMessage = (message) => {
+  const formatMessage = (message: string) => {
     return message
       .replace(/^###### (.*?)$/gm, "<h6>$1</h6>") // Headers level 6
       .replace(/^##### (.*?)$/gm, "<h5>$1</h5>") // Headers level 5
@@ -118,7 +124,7 @@ export default function Home() {
       .replace(/`([^`]+)`/g, "<code>$1</code>"); // Code
   };
 
-  const saveChatHistory = async (userId, chatHistory) => {
+  const saveChatHistory = async (userId: string, chatHistory: any[]) => {
     try {
       await setDoc(doc(db, "chats", userId), { chatHistory });
     } catch (error) {
@@ -126,20 +132,20 @@ export default function Home() {
     }
   };
 
-  const loadChatHistory = async (userId) => {
+  const loadChatHistory = async (userId: string) => {
     try {
       const docSnap = await getDoc(doc(db, "chats", userId));
       if (docSnap.exists()) {
         const history = docSnap.data().chatHistory;
         setChatHistory([initialPrompt, ...history]);
-        history.forEach((message) => appendMessage(message.role === "user" ? userName : "Assistant", formatMessage(message.content), message.role));
+        history.forEach((message: any) => appendMessage(message.role === "user" ? userName : "Assistant", formatMessage(message.content), message.role));
       }
     } catch (error) {
       console.error("Error loading chat history:", error);
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       sendMessage();
     }

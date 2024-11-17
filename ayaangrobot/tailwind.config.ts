@@ -16,13 +16,10 @@ const config: Config = {
         inputBg: "var(--input-bg)",
         inputFg: "var(--input-fg)",
       },
-      animation: {
-        pulse: "pulse 2s infinite",
-      },
       keyframes: {
         pulse: {
-          "0%, 100%": { opacity: 1 },
-          "50%": { opacity: 0.5 },
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
         },
       },
     },
