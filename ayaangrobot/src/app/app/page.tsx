@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
@@ -28,6 +28,19 @@ export default function Home() {
   const [chatHistory, setChatHistory] = useState([initialPrompt]);
   const [userName, setUserName] = useState("");
 
+  const loadChatHistory = useCallback(async (userId: string) => {
+    try {
+      const docSnap = await getDoc(doc(db, "chats", userId));
+      if (docSnap.exists()) {
+        const history = docSnap.data().chatHistory as { role: string; content: string }[];
+        setChatHistory([initialPrompt, ...history]);
+        history.forEach((message) => appendMessage(message.role === "user" ? userName : "Assistant", formatMessage(message.content), message.role));
+      }
+    } catch (error) {
+      console.error("Error loading chat history:", error);
+    }
+  }, [userName]);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -40,7 +53,7 @@ export default function Home() {
         setUser(null);
       }
     });
-  }, []);
+  }, [loadChatHistory]);
 
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -124,24 +137,11 @@ export default function Home() {
       .replace(/`([^`]+)`/g, "<code>$1</code>"); // Code
   };
 
-  const saveChatHistory = async (userId: string, chatHistory: any[]) => {
+  const saveChatHistory = async (userId: string, chatHistory: { role: string; content: string }[]) => {
     try {
       await setDoc(doc(db, "chats", userId), { chatHistory });
     } catch (error) {
       console.error("Error saving chat history:", error);
-    }
-  };
-
-  const loadChatHistory = async (userId: string) => {
-    try {
-      const docSnap = await getDoc(doc(db, "chats", userId));
-      if (docSnap.exists()) {
-        const history = docSnap.data().chatHistory;
-        setChatHistory([initialPrompt, ...history]);
-        history.forEach((message: any) => appendMessage(message.role === "user" ? userName : "Assistant", formatMessage(message.content), message.role));
-      }
-    } catch (error) {
-      console.error("Error loading chat history:", error);
     }
   };
 
