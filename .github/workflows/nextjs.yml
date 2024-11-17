@@ -39,7 +39,7 @@ jobs:
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
             exit 0
-          elif [ -f "/home/runner/work/ayaangrobot/ayaangrobot/ayaangrobot/package.json" ]; then
+          elif [ -f "/home/runner/work/ayaangrobot/ayaangrobot/ayaangrobot/package-lock.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
