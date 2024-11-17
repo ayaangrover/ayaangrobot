@@ -6,12 +6,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signO
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA4EH_d8_qmCrYTOjwpOhLKE358pBbr18Q",
-  authDomain: "fir-auth-a88ab.firebaseapp.com",
-  projectId: "fir-auth-a88ab",
-  storageBucket: "fir-auth-a88ab.appspot.com",
-  messagingSenderId: "877345739547",
-  appId: "1:877345739547:web:3df24f5ec45383b49879be"
+  apiKey: "AIzaSyBx2l1AbihKqcRm18dClDy4gVmskFMZENs",
+  authDomain: "ayaangrobot.firebaseapp.com",
+  projectId: "ayaangrobot",
+  storageBucket: "ayaangrobot.firebasestorage.app",
+  messagingSenderId: "765523714502",
+  appId: "1:765523714502:web:1e16a5b75420e73f5752c7",
+  measurementId: "G-P3SVYXQH2Y"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -25,7 +26,7 @@ const initialPrompt = {
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
-  const [chatHistory, setChatHistory] = useState([initialPrompt]);
+  const [chatHistory, setChatHistory] = useState<{ role: string; content: string }[]>([]);
   const [userName, setUserName] = useState("");
 
   const loadChatHistory = useCallback(async (userId: string) => {
@@ -33,8 +34,13 @@ export default function Home() {
       const docSnap = await getDoc(doc(db, "chats", userId));
       if (docSnap.exists()) {
         const history = docSnap.data().chatHistory as { role: string; content: string }[];
-        setChatHistory([initialPrompt, ...history]);
-        history.forEach((message) => appendMessage(message.role === "user" ? userName : "Assistant", formatMessage(message.content), message.role));
+        setChatHistory(history);
+        clearChatBox();
+        history.forEach((message) => {
+          if (message.role !== "system") {
+            appendMessage(message.role === "user" ? userName : "Assistant", formatMessage(message.content), message.role);
+          }
+        });
       }
     } catch (error) {
       console.error("Error loading chat history:", error);
@@ -80,7 +86,7 @@ export default function Home() {
     setChatHistory(updatedChatHistory);
     (document.getElementById("user-input") as HTMLInputElement).value = "";
     const requestBody = {
-      messages: updatedChatHistory,
+      messages: [initialPrompt, ...updatedChatHistory],
       model: "llama3-8b-8192"
     };
     try {
@@ -121,6 +127,13 @@ export default function Home() {
       messageContainer.appendChild(messageBubble);
       chatBox.appendChild(messageContainer);
       chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  };
+
+  const clearChatBox = () => {
+    const chatBox = document.getElementById("chat-box");
+    if (chatBox) {
+      chatBox.innerHTML = "";
     }
   };
 
