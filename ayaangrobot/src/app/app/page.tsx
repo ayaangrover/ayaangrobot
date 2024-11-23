@@ -6,13 +6,13 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signO
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBx2l1AbihKqcRm18dClDy4gVmskFMZENs",
-  authDomain: "ayaangrobot.firebaseapp.com",
-  projectId: "ayaangrobot",
-  storageBucket: "ayaangrobot.firebasestorage.app",
-  messagingSenderId: "765523714502",
-  appId: "1:765523714502:web:1e16a5b75420e73f5752c7",
-  measurementId: "G-P3SVYXQH2Y"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
@@ -94,7 +94,7 @@ export default function Home() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer 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"
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_GROQ_API_KEY}`
         },
         body: JSON.stringify(requestBody)
       });
