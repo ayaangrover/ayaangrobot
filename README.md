@@ -1,9 +1,54 @@
-# Ayaan Grobot 
+# Ayaan Grobot  
+*An AI-powered chatbot built with Groq AI and Llama 3 for fast and efficient performance.*
 
-Ayaan Grobot was made with Groq AI, which is not only fast but also free(so far) and uses Llama3. I coded it in HTML/JS/CSS but later moved it to Next.js. It has google login with firebase, and each user has their chats stored in firestore.
+## Features  
+- **Groq AI Integration**: Powered by Llama 3 for speed and accuracy.  
+- **Next.js Framework**: Modern architecture for scalability and performance.  
+- **Google Login**: Secure authentication with Firebase.  
+- **Chat History**: User conversations stored securely in Firestore.  
+- **Responsive Design**: Optimized for devices of all sizes.  
 
-Need help? Email [ayaangrobot-aaaaowlmjut7p3xbifcpxxhxny@hackclub.slack.com](mailto:ayaangrobot-aaaaowlmjut7p3xbifcpxxhxny@hackclub.slack.com)! We'll (usually) respond within hours.
+## Installation  
+1. Clone the repository:  
 
-I used AI to do 3 things: help me debug(I'm new to typescript), get the tts api request working(I didn't know whether I needed a node server or I should use API routes), and help me resolve some errors(npm issues and incompatibility)
+```bash
+git clone https://github.com/ayaangrover/ayaangrobot.git
 
-Loader and Google icons are from react-icons. The Google Logo is a trademark of Google. 
+cd ayaangrobot  
+```
+2. Install dependencies:  
+   
+```bash
+npm install
+```
+  
+3. Start the application:  
+   
+```bash
+npm run dev
+```
+  
+
+## Usage  
+1. Log in using your Google account.  
+2. Start a chat with Ayaan Grobot.  
+3. Access your chat history anytime.  
+
+---
+
+## Support
+
+Just email us at ayaangrobot-aaaaowlmjut7p3xbifcpxxhxny@hackclub.slack.com!
+
+---
+
+This README was human-generated, AI-enhanced, and then human-adjusted.
+
+---
+
+I used AI to do 3 things: 
+- Help me debug(I'm new to typescript).
+
+- Get the tts api request working(I didn't know whether I needed a node server or I should use API routes).
+
+- Help me resolve some errors(npm issues and incompatibility) Loader and Google icons are from react-icons.
