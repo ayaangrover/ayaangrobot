@@ -43,12 +43,13 @@ Just email us at ayaangrobot-aaaaowlmjut7p3xbifcpxxhxny@hackclub.slack.com!
 ---
 
 This README was human-generated, AI-enhanced, and then human-adjusted.
-
----
+Loader and Google icons are from react-icons.
 
 I used AI to do 3 things: 
 - Help me debug(I'm new to typescript).
 
 - Get the tts api request working(I didn't know whether I needed a node server or I should use API routes).
 
-- Help me resolve some errors(npm issues and incompatibility) Loader and Google icons are from react-icons.
+- Help me resolve some errors(npm issues and incompatibility)
+
+---
