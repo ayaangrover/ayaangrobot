@@ -4,6 +4,6 @@ Ayaan Grobot was made with Groq AI, which is not only fast but also free(so far)
 
 Need help? Email [ayaangrobot-aaaaowlmjut7p3xbifcpxxhxny@hackclub.slack.com](mailto:ayaangrobot-aaaaowlmjut7p3xbifcpxxhxny@hackclub.slack.com)! We'll (usually) respond within hours.
 
-AI used for debugging, resolving some errors, and helping me get the tts api request working(i asked it to research how to do it and whether i needed a node.js server or not).
+I used AI to do 3 things: help me debug(I'm new to typescript), get the tts api request working(I didn't know whether I needed a node server or I should use API routes), and help me resolve some errors(npm issues and incompatibility)
 
 Loader and Google icons are from react-icons. The Google Logo is a trademark of Google. 
