@@ -53,3 +53,5 @@ I used AI to do 3 things:
 - Help me resolve some errors(npm issues and incompatibility)
 
 ---
+
+PS: if anyone has a good book suggestion or video course for typescript? I keep running into errors and they take forever to fix...
