@@ -1,50 +1,70 @@
 "use client";
 
-import { useEffect, useRef, useState, ReactElement } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaGoogle, FaBolt, FaLock, FaDatabase } from "react-icons/fa";
-import { FiLoader } from "react-icons/fi";
-import LocomotiveScroll from "locomotive-scroll";
-import "locomotive-scroll/src/locomotive-scroll.scss"; // Import Locomotive Scroll styles
-import CustomCursor from "../../components/CustomCursor";
+import dynamic from "next/dynamic";
+
+const LocomotiveScroll = dynamic(() => import('locomotive-scroll'), {
+  ssr: false
+});
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const scrollRef = useRef(null);
   const cursorRef = useRef<HTMLDivElement | null>(null);
-  const cursorPos = useRef({ x: 0, y: 0 });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const scroll = new LocomotiveScroll({
-      el: scrollRef.current || undefined,
-      smooth: true,
-      multiplier: 1.5,
-    });
+    setIsMounted(true);
+    
+    if (!isMounted) return;
+
+    let scroll: any = null;
+    
+    const initScroll = setTimeout(() => {
+      if (scrollRef.current) {
+        scroll = new LocomotiveScroll({
+          el: scrollRef.current,
+          smooth: true,
+          multiplier: 1.5,
+        });
+      }
+    }, 100);
 
     return () => {
+      clearTimeout(initScroll);
       if (scroll) scroll.destroy();
     };
-  }, []);
+  }, [isMounted]);
 
   useEffect(() => {
-    const cursor = cursorRef.current!;
+    if (!isMounted) return;
+
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
+    let animationFrame: number;
+    const cursorPos = { x: 0, y: 0 };
+
     const handleMouseMove = (e: MouseEvent) => {
-      cursorPos.current = { x: e.clientX, y: e.clientY };
+      cursorPos.x = e.clientX;
+      cursorPos.y = e.clientY;
     };
 
     const updateCursor = () => {
-      cursor!.style.transform = `translate3d(${cursorPos.current.x}px, ${cursorPos.current.y}px, 0)`;
-      requestAnimationFrame(updateCursor);
+      cursor.style.transform = `translate3d(${cursorPos.x}px, ${cursorPos.y}px, 0)`;
+      animationFrame = requestAnimationFrame(updateCursor);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    updateCursor();
+    window.addEventListener("mousemove", handleMouseMove);
+    animationFrame = requestAnimationFrame(updateCursor);
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrame);
     };
-  }, []);
+  }, [isMounted]);
 
   const loginWithGoogle = () => {
     setLoading(true);
@@ -58,6 +78,10 @@ export default function Home() {
       </span>
     ));
   };
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div ref={scrollRef} data-scroll-container className="min-h-screen bg-white text-black relative">
