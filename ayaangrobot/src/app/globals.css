@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "locomotive-scroll/dist/locomotive-scroll.css";
+
 *{
   color: #000000;
 }
