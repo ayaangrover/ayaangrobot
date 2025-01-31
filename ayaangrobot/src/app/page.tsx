@@ -2,44 +2,41 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-
-const LocomotiveScroll = dynamic(() => import('locomotive-scroll'), {
-  ssr: false
-});
+import LocomotiveScroll from "locomotive-scroll";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const scrollRef = useRef(null);
-  const cursorRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const locomotiveScrollRef = useRef<LocomotiveScroll | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
-    
-    if (!isMounted) return;
 
-    let scroll: any = null;
-    
-    const initScroll = setTimeout(() => {
-      if (scrollRef.current) {
-        scroll = new LocomotiveScroll({
+    if (typeof window === 'undefined') return;
+
+    const initScroll = () => {
+      if (scrollRef.current && !locomotiveScrollRef.current) {
+        locomotiveScrollRef.current = new LocomotiveScroll({
           el: scrollRef.current,
           smooth: true,
           multiplier: 1.5,
         });
       }
-    }, 100);
+    };
+
+    const timeoutId = setTimeout(initScroll, 100);
 
     return () => {
-      clearTimeout(initScroll);
-      if (scroll) scroll.destroy();
+      clearTimeout(timeoutId);
+      locomotiveScrollRef.current?.destroy();
     };
-  }, [isMounted]);
+  }, []);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (typeof window === 'undefined') return;
 
     const cursor = cursorRef.current;
     if (!cursor) return;
@@ -64,7 +61,7 @@ export default function Home() {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationFrame);
     };
-  }, [isMounted]);
+  }, []);
 
   const loginWithGoogle = () => {
     setLoading(true);
@@ -78,10 +75,6 @@ export default function Home() {
       </span>
     ));
   };
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div ref={scrollRef} data-scroll-container className="min-h-screen bg-white text-black relative">
